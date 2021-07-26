@@ -73,14 +73,16 @@ function db() {
     let fieldsExist = false;
 
     updatableFields.forEach(i => {
-      if (fields.hasOwnProperty(i)) {
+      if (fields.hasOwnProperty(i) && fields[i]) {
         fieldsExist = true;
-        if (fields[i] || i == 'open') {
+        //if (fields[i] || i == 'open') {
           fieldsToUpdate[i] = fields[i];
-        }
+        //}
       }  
     });
     
+    //console.log(fieldsExist, 'sent: ', fields, 'to update: ', fieldsToUpdate);
+
     if (!fieldsExist) {
       //console.log('no update fields');
       return done({ error: 'no update field(s) sent', _id: id });
