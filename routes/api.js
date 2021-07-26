@@ -40,7 +40,7 @@ module.exports = function (app) {
       db.updateIssue(req.body._id, req.body, (err, data) => {        
         if (err) return res.json(err);
         //console.log('ive updated', err, data);
-        res.json(data);
+        res.json({ result: 'successfully updated', _id: req.body._id });
       })
     })
     

@@ -113,7 +113,7 @@ suite('Functional Tests', function() {
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
-          assert.equal(res.body.issue_text, 'text updated');
+          assert.equal(res.body.result, 'successfully updated');
           done();
         });
     });
@@ -131,8 +131,7 @@ suite('Functional Tests', function() {
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
-          assert.equal(res.body.issue_text, 'text updated');
-          assert.equal(res.body.status_text, 'status updated');
+          assert.equal(res.body.result, 'successfully updated');          
           done();
         });
     });
@@ -187,16 +186,6 @@ suite('Functional Tests', function() {
     });
 
   test('Delete an issue: DELETE request to /api/issues/{project}', done => {
-      // chai
-      //   .request(server)
-      //   .post('/api/issues/test_suite')
-      //   .send(
-      //     { "_id": "60ff22fc00fed406595etest",
-      //       "issue_title": "Fix error in posting data",
-      //       "issue_text": "When we post data it has an error.",
-      //       "created_by": "Joe"
-      //     });
-
       chai
         .request(server)
         .delete('/api/issues/test_suite')
