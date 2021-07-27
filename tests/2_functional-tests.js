@@ -195,13 +195,13 @@ suite('Functional Tests', function() {
             "issue_text": "When we post data it has an error.",
             "created_by": "test service"
           })
-        .end((err, res) => {
+        .end((err, res) => {          
           chai
           .request(server)
           .delete('/api/issues/test_suite')
           .send(
             {             
-              "_id": res._id            
+              "_id": res.body._id            
             })
           .end(function (err, res) {
             assert.equal(res.status, 200);
