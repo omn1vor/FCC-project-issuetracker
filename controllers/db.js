@@ -133,7 +133,7 @@ function db() {
     { _id: body._id, project: project },    
     (err, data) => {
         //console.log(err, data);
-        if (err || data.ok != 1) {
+        if (err || !data.deletedCount) {
           console.log(err);
           return done({ error: 'could not delete', _id: body._id });
         };        

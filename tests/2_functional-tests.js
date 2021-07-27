@@ -188,17 +188,29 @@ suite('Functional Tests', function() {
   test('Delete an issue: DELETE request to /api/issues/{project}', done => {
       chai
         .request(server)
-        .delete('/api/issues/test_suite')
+        .post('/api/issues/test_suite')
         .send(
-          {             
-            "_id": "60ff1954a0ad4104b6d6d81c"            
+          { 
+            "issue_title": "to be deleted",
+            "issue_text": "When we post data it has an error.",
+            "created_by": "test service"
           })
-        .end(function (err, res) {
-          assert.equal(res.status, 200);
-          assert.equal(res.type, 'application/json');
-          assert.equal(res.body.result, 'successfully deleted');
-          done();
+        .end((err, res) => {
+          chai
+          .request(server)
+          .delete('/api/issues/test_suite')
+          .send(
+            {             
+              "_id": res._id            
+            })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal(res.type, 'application/json');
+            assert.equal(res.body.result, 'successfully deleted');
+            done();
+          });
         });
+        
     });
     
   test('Delete an issue with an invalid _id: DELETE request to /api/issues/{project}', done => {          
