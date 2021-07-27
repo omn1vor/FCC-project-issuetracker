@@ -12,7 +12,7 @@ suite('Functional Tests', function() {
         .post('/api/issues/test_suite')
         .send(
           { 
-            "_id": "60ff22fc00fed406595edeae",
+            "_id": "60ff1954a0ad4104b6d6d81c",
             "issue_title": "Fix error in posting data",
             "issue_text": "When we post data it has an error.",
             "created_by": "Joe",
@@ -107,7 +107,7 @@ suite('Functional Tests', function() {
         .put('/api/issues/test_suite')
         .send(
           { 
-            "_id": "60ff22fc00fed406595edeae",
+            "_id": "60ff1954a0ad4104b6d6d81c",
             "issue_text": "text updated"
           })
         .end(function (err, res) {
@@ -124,7 +124,7 @@ suite('Functional Tests', function() {
         .put('/api/issues/test_suite')
         .send(
           { 
-            "_id": "60ff22fc00fed406595edeae",
+            "_id": "60ff1954a0ad4104b6d6d81c",
             "issue_text": "text updated",
             "status_text": "status updated"
           })
@@ -159,12 +159,12 @@ suite('Functional Tests', function() {
         .put('/api/issues/test_suite')
         .send(
           {             
-            "_id": "60ff22fc00fed406595edeae"            
+            "_id": "60ff1954a0ad4104b6d6d81c"            
           })
         .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.type, 'application/json');
-          assert.equal(res.body.error, 'no update field(s) sent');
+          assert.deepEqual(res.body, { error: 'no update field(s) sent', '_id': '60ff1954a0ad4104b6d6d81c' });
           done();
         });
     });
@@ -191,7 +191,7 @@ suite('Functional Tests', function() {
         .delete('/api/issues/test_suite')
         .send(
           {             
-            "_id": "60ff22fc00fed406595edeae"            
+            "_id": "60ff1954a0ad4104b6d6d81c"            
           })
         .end(function (err, res) {
           assert.equal(res.status, 200);

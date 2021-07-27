@@ -31,6 +31,11 @@ function db() {
   }
 
   this.addIssue = function(project, body, done) {
+    
+    if (!this.checkInput(body)) {        
+      return done({ error: 'required field(s) missing' });
+    }
+    
     const newIssue = new Issue({
       project: project,
       issue_title: body.issue_title,
@@ -44,7 +49,10 @@ function db() {
     });
     
     newIssue.save((err, data) => {
-      if (err) return console.log(err);      
+      if (err) {
+        console.log(err);
+        return done({ error: 'could not update' });
+      }
       done(null, data);
     });
   }
@@ -57,27 +65,32 @@ function db() {
     }
     
     Issue.find(filter, (err, data) => {
-      if (err) return console.log(err);
+      if (err) {
+        console.log(err);
+        return done({ error: 'could not get issues list' });
+      }
       done(null, data);
     })
   }
 
   this.updateIssue = function(id, fields, done) {
     
+    if (!fields.hasOwnProperty('_id')) {
+      return done({ error: 'missing _id' });
+    }
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return done({ error: 'could not update', _id: id });
     }
 
-    let updatableFields = ['issue_title', 'issue_text', 'created_by', 'assigned_to', 'status_text', 'open'];
+    let updatableFields = ['issue_title', 'issue_text', 'created_by', 'assigned_to', 'status_text', 'open', 'created_on', 'project'];
     let fieldsToUpdate = { updated_on: Date() };
     let fieldsExist = false;
 
     updatableFields.forEach(i => {
-      if (fields.hasOwnProperty(i) && fields[i]) {
+      if (fields.hasOwnProperty(i) && (fields[i] || i == 'open')) {
         fieldsExist = true;
-        //if (fields[i] || i == 'open') {
           fieldsToUpdate[i] = fields[i];
-        //}
       }  
     });
     
@@ -95,33 +108,38 @@ function db() {
       fieldsToUpdate,
       { new: true },
       (err, data) => {
-        if (err) {
+        //console.log(err, data);
+        if (err || !data) {
           console.log(err);
           return done({ error: 'could not update', _id: id });
         };
-        done(null, data);
+        done(null, { result: 'successfully updated', _id: id });
       }
     )
  }
 
-  this.deleteIssue = function(project, id, done) {
+  this.deleteIssue = function(project, body, done) {
     
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return done({ error: 'could not delete', _id: id });
+    if (!body.hasOwnProperty('_id')) {
+      return done({ error: 'missing _id' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(body._id)) {
+      //console.log('id ' + body._id + ' is not valid!')
+      return done({ error: 'could not delete', _id: body._id });
     }
 
     Issue.deleteOne(
-    { _id: id, project: project },    
+    { _id: body._id, project: project },    
     (err, data) => {
-        if (err) {
+        //console.log(err, data);
+        if (err || data.ok != 1) {
           console.log(err);
-          return done({ error: 'could not delete', _id: id });
-        };
-        //console.log(data);
-        done(null, data);
+          return done({ error: 'could not delete', _id: body._id });
+        };        
+        done(null, { result: 'successfully deleted', _id: body._id });
       }
     )
-  
   }
 }
 
